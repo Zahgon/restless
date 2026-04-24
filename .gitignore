@@ -16,3 +16,6 @@ htmlcov
 *.swp
 .idea/
 *.whl
+
+.aider*
+logs/
