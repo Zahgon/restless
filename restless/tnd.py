@@ -37,7 +37,7 @@ def _method(self, *args, **kwargs):
     """
     the body of those http-methods used in tornado.web.RequestHandler
     """
-    yield self.resource_handler.handle(self.__resource_view_type__, *args, **kwargs)
+    pass
 
 
 class _BridgeMixin(object):
@@ -89,7 +89,7 @@ class TornadoResource(Resource):
         """
         access to ``tornado.web.RequestHandler``
         """
-        return self.ref_rh
+        pass
 
     @classmethod
     def as_view(cls, view_type, *init_args, **init_kwargs):

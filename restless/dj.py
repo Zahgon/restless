@@ -104,13 +104,7 @@ class DjangoResource(Resource):
         :returns: The final name
         :rtype: string
         """
-        if name_prefix is None:
-            name_prefix = 'api_{}'.format(
-                cls.__name__.replace('Resource', '').lower()
-            )
-
-        name_prefix = name_prefix.rstrip('_')
-        return '_'.join([name_prefix, name])
+        pass
 
     @classmethod
     def urls(cls, name_prefix=None):
@@ -127,7 +121,4 @@ class DjangoResource(Resource):
 
         :returns: A list of ``url`` objects for ``include(...)``
         """
-        return [
-            url(r'^$', cls.as_list(), name=cls.build_url_name('list', name_prefix)),
-            url(r'^(?P<pk>[\w-]+)/$', cls.as_detail(), name=cls.build_url_name('detail', name_prefix)),
-        ]
+        pass

@@ -19,9 +19,7 @@ class FlaskResource(Resource):
         def _wrapper(*args, **kwargs):
             # Make a new instance so that no state potentially leaks between
             # instances.
-            inst = cls(*init_args, **init_kwargs)
-            inst.request = request
-            return inst.handle('list', *args, **kwargs)
+            pass
 
         return _wrapper
 
@@ -32,9 +30,7 @@ class FlaskResource(Resource):
         def _wrapper(*args, **kwargs):
             # Make a new instance so that no state potentially leaks between
             # instances.
-            inst = cls(*init_args, **init_kwargs)
-            inst.request = request
-            return inst.handle('detail', *args, **kwargs)
+            pass
 
         return _wrapper
 
@@ -73,13 +69,7 @@ class FlaskResource(Resource):
         :returns: The final name
         :rtype: string
         """
-        if endpoint_prefix is None:
-            endpoint_prefix = 'api_{}'.format(
-                cls.__name__.replace('Resource', '').lower()
-            )
-
-        endpoint_prefix = endpoint_prefix.rstrip('_')
-        return '_'.join([endpoint_prefix, name])
+        pass
 
     @classmethod
     def add_url_rules(cls, app, rule_prefix, endpoint_prefix=None):
@@ -102,17 +92,4 @@ class FlaskResource(Resource):
 
         :returns: Nothing
         """
-        methods = ['GET', 'POST', 'PUT', 'DELETE']
-
-        app.add_url_rule(
-            rule_prefix,
-            endpoint=cls.build_endpoint_name('list', endpoint_prefix),
-            view_func=cls.as_list(),
-            methods=methods
-        )
-        app.add_url_rule(
-            rule_prefix + '<pk>/',
-            endpoint=cls.build_endpoint_name('detail', endpoint_prefix),
-            view_func=cls.as_detail(),
-            methods=methods
-        )
+        pass

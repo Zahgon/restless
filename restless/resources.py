@@ -15,8 +15,7 @@ def skip_prepare(func):
     """
     @wraps(func)
     def _wrapper(self, *args, **kwargs):
-        value = func(self, *args, **kwargs)
-        return Data(value, should_prepare=False)
+        pass
     return _wrapper
 
 
@@ -137,9 +136,7 @@ class Resource(object):
         def _wrapper(request, *args, **kwargs):
             # Make a new instance so that no state potentially leaks between
             # instances.
-            inst = cls(*init_args, **init_kwargs)
-            inst.request = request
-            return inst.handle(view_type, *args, **kwargs)
+            pass
 
         return _wrapper
 

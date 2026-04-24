@@ -20,12 +20,7 @@ class MoreTypesJSONEncoder(json.JSONEncoder):
 
     """
     def default(self, data):
-        if isinstance(data, (datetime.datetime, datetime.date, datetime.time)):
-            return data.isoformat()
-        elif isinstance(data, decimal.Decimal) or isinstance(data, uuid.UUID):
-            return str(data)
-        else:
-            return super(MoreTypesJSONEncoder, self).default(data)
+        pass
 
 
 def format_traceback(exc_info):

@@ -21,10 +21,7 @@ class PyramidResource(Resource):
         def _wrapper(request):
             # Make a new instance so that no state potentially leaks between
             # instances.
-            inst = cls(*init_args, **init_kwargs)
-            inst.request = request
-            name = request.matchdict['name']
-            return inst.handle('detail', name)
+            pass
 
         return _wrapper
 
@@ -55,13 +52,7 @@ class PyramidResource(Resource):
         :returns: The final name
         :rtype: string
         """
-        if routename_prefix is None:
-            routename_prefix = 'api_{}'.format(
-                cls.__name__.replace('Resource', '').lower()
-            )
-
-        routename_prefix = routename_prefix.rstrip('_')
-        return '_'.join([routename_prefix, name])
+        pass
 
     @classmethod
     def add_views(cls, config, rule_prefix, routename_prefix=None):
@@ -83,26 +74,5 @@ class PyramidResource(Resource):
 
         :returns: ``pyramid.config.Configurator``
         """
-        methods = ('GET', 'POST', 'PUT', 'DELETE')
-
-        config.add_route(
-            cls.build_routename('list', routename_prefix),
-            rule_prefix
-        )
-        config.add_view(
-            cls.as_list(),
-            route_name=cls.build_routename('list', routename_prefix),
-            request_method=methods
-        )
-
-        config.add_route(
-            cls.build_routename('detail', routename_prefix),
-            rule_prefix + '{name}/'
-        )
-        config.add_view(
-            cls.as_detail(),
-            route_name=cls.build_routename('detail', routename_prefix),
-            request_method=methods
-        )
-        return config
+        pass
 
