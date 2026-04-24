@@ -6,7 +6,7 @@ class Preparer(object):
     Restless.
     """
     def __init__(self):
-        super(Preparer, self).__init__()
+        pass
 
     def prepare(self, data):
         """
@@ -14,7 +14,7 @@ class Preparer(object):
 
         By default, this does nothing & simply returns the data passed to it.
         """
-        return data
+        pass
 
 
 class FieldsPreparer(Preparer):
@@ -36,8 +36,7 @@ class FieldsPreparer(Preparer):
 
     """
     def __init__(self, fields):
-        super(FieldsPreparer, self).__init__()
-        self.fields = fields
+        pass
 
     def prepare(self, data):
         """
@@ -48,19 +47,7 @@ class FieldsPreparer(Preparer):
 
         Returns a dictionary of data as the response.
         """
-        result = {}
-
-        if not self.fields:
-            # No fields specified. Serialize everything.
-            return data
-
-        for fieldname, lookup in self.fields.items():
-            if isinstance(lookup, SubPreparer):
-                result[fieldname] = lookup.prepare(data)
-            else:
-                result[fieldname] = self.lookup_data(lookup, data)
-
-        return result
+        pass
 
     def lookup_data(self, lookup, data):
         """
@@ -95,32 +82,7 @@ class FieldsPreparer(Preparer):
             'daniel'
 
         """
-        value = data
-        parts = lookup.split('.')
-
-        if not parts or not parts[0]:
-            return value
-
-        part = parts[0]
-        remaining_lookup = '.'.join(parts[1:])
-
-        if callable(getattr(data, 'keys', None)) and hasattr(data, '__getitem__'):
-            # Dictionary enough for us.
-            value = data[part]
-        elif data is not None:
-            # Assume it's an object.
-            value = getattr(data, part)
-
-        # Call if it's callable except if it's a Django DB manager instance
-        #   We check if is a manager by checking the db_manager (duck typing)
-        if callable(value) and not hasattr(value, 'db_manager'):
-            value = value()
-
-        if not remaining_lookup:
-            return value
-
-        # There's more to lookup, so dive in recursively.
-        return self.lookup_data(remaining_lookup, value)
+        pass
 
 
 class SubPreparer(FieldsPreparer):
@@ -176,8 +138,7 @@ class SubPreparer(FieldsPreparer):
 
     """
     def __init__(self, lookup, preparer):
-        self.lookup = lookup
-        self.preparer = preparer
+        pass
 
     def get_inner_data(self, data):
         """
@@ -185,7 +146,7 @@ class SubPreparer(FieldsPreparer):
         broader dataset, allowing the preparer being called to deal with just
         the expected subset.
         """
-        return self.lookup_data(self.lookup, data)
+        pass
 
     def prepare(self, data):
         """
@@ -196,7 +157,7 @@ class SubPreparer(FieldsPreparer):
 
         Returns a dictionary of data as the response.
         """
-        return self.preparer.prepare(self.get_inner_data(data))
+        pass
 
 
 class CollectionSubPreparer(SubPreparer):
@@ -234,9 +195,4 @@ class CollectionSubPreparer(SubPreparer):
 
         Returns a list of data as the response.
         """
-        result = []
-
-        for item in self.get_inner_data(data):
-            result.append(self.preparer.prepare(item))
-
-        return result
+        pass

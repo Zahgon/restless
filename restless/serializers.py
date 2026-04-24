@@ -25,7 +25,7 @@ class Serializer(object):
         :returns: The deserialized data
         :rtype: ``list`` or ``dict``
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
 
     def serialize(self, data):
         """
@@ -40,7 +40,7 @@ class Serializer(object):
         :returns: A serialized version of the data
         :rtype: string
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
 
 
 class JSONSerializer(Serializer):
@@ -59,12 +59,7 @@ class JSONSerializer(Serializer):
         :returns: The deserialized data
         :rtype: ``list`` or ``dict``
         """
-        try:
-            if isinstance(body, bytes):
-                return json.loads(body.decode('utf-8'))
-            return json.loads(body)
-        except ValueError:
-            raise BadRequest('Request body is not valid JSON')
+        pass
 
     def serialize(self, data):
         """
@@ -81,4 +76,4 @@ class JSONSerializer(Serializer):
         :returns: A serialized version of the data
         :rtype: string
         """
-        return json.dumps(data, cls=MoreTypesJSONEncoder)
+        pass

@@ -13,6 +13,4 @@ class Data(object):
         ``prepare_with`` is reserved for future use in specifying a custom
         callable. Default is ``None`` (no custom callable).
         """
-        self.value = value
-        self.should_prepare = should_prepare
-        self.prepare_with = prepare_with
+        pass

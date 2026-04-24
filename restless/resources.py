@@ -13,10 +13,7 @@ def skip_prepare(func):
     """
     A convenience decorator for indicating the raw data should not be prepared.
     """
-    @wraps(func)
-    def _wrapper(self, *args, **kwargs):
-        pass
-    return _wrapper
+    pass
 
 
 class Resource(object):
@@ -73,12 +70,7 @@ class Resource(object):
     serializer = JSONSerializer()
 
     def __init__(self, *args, **kwargs):
-        self.init_args = args
-        self.init_kwargs = kwargs
-        self.request = None
-        self.data = None
-        self.endpoint = None
-        self.status = 200
+        pass
 
     @classmethod
     def as_list(cls, *init_args, **init_kwargs):
@@ -95,7 +87,7 @@ class Resource(object):
 
         :returns: View function
         """
-        return cls.as_view('list', *init_args, **init_kwargs)
+        pass
 
     @classmethod
     def as_detail(cls, *init_args, **init_kwargs):
@@ -112,7 +104,7 @@ class Resource(object):
 
         :returns: View function
         """
-        return cls.as_view('detail', *init_args, **init_kwargs)
+        pass
 
     @classmethod
     def as_view(cls, view_type, *init_args, **init_kwargs):
@@ -132,13 +124,7 @@ class Resource(object):
 
         :returns: View function
         """
-        @wraps(cls)
-        def _wrapper(request, *args, **kwargs):
-            # Make a new instance so that no state potentially leaks between
-            # instances.
-            pass
-
-        return _wrapper
+        pass
 
     def request_method(self):
         """
@@ -150,8 +136,7 @@ class Resource(object):
         :returns: The HTTP method in uppercase
         :rtype: string
         """
-        # By default, Django-esque.
-        return self.request.method.upper()
+        pass
 
     def request_body(self):
         """
@@ -165,8 +150,7 @@ class Resource(object):
         :returns: The body of the request
         :rtype: string
         """
-        # By default, Django-esque.
-        return self.request.body
+        pass
 
     def build_response(self, data, status=200):
         """
@@ -184,7 +168,7 @@ class Resource(object):
 
         :returns: A response object
         """
-        raise NotImplementedError()
+        pass
 
     def build_error(self, err):
         """
@@ -197,17 +181,7 @@ class Resource(object):
 
         :returns: A response object
         """
-        data = {
-            'error': err.args[0],
-        }
-
-        if self.is_debug():
-            # Add the traceback.
-            data['traceback'] = format_traceback(sys.exc_info())
-
-        body = self.serializer.serialize(data)
-        status = getattr(err, 'status', 500)
-        return self.build_response(body, status=status)
+        pass
 
     def is_debug(self):
         """
@@ -222,7 +196,7 @@ class Resource(object):
         :returns: If the resource is in a debug environment
         :rtype: boolean
         """
-        return False
+        pass
 
     def bubble_exceptions(self):
         """
@@ -237,7 +211,7 @@ class Resource(object):
         :returns: Whether exceptions should be re-raised or not
         :rtype: boolean
         """
-        return False
+        pass
 
     def handle(self, endpoint, *args, **kwargs):
         """
@@ -261,32 +235,7 @@ class Resource(object):
 
         :returns: A response object
         """
-        self.endpoint = endpoint
-        method = self.request_method()
-
-        try:
-            # Use ``.get()`` so we can also dodge potentially incorrect
-            # ``endpoint`` errors as well.
-            if not method in self.http_methods.get(endpoint, {}):
-                raise MethodNotImplemented(
-                    "Unsupported method '{}' for {} endpoint.".format(
-                        method,
-                        endpoint
-                    )
-                )
-
-            if not self.is_authenticated():
-                raise Unauthorized()
-
-            self.data = self.deserialize(method, endpoint, self.request_body())
-            view_method = getattr(self, self.http_methods[endpoint][method])
-            data = view_method(*args, **kwargs)
-            serialized = self.serialize(method, endpoint, data)
-        except Exception as err:
-            return self.handle_error(err)
-
-        status = self.status_map.get(self.http_methods[endpoint][method], OK)
-        return self.build_response(serialized, status=status)
+        pass
 
     def handle_error(self, err):
         """
@@ -299,10 +248,7 @@ class Resource(object):
 
         :returns: A response object
         """
-        if self.bubble_exceptions():
-            raise err
-
-        return self.build_error(err)
+        pass
 
     def deserialize(self, method, endpoint, body):
         """
@@ -323,10 +269,7 @@ class Resource(object):
         :returns: The deserialized data
         :rtype: ``list`` or ``dict``
         """
-        if endpoint == 'list':
-            return self.deserialize_list(body)
-
-        return self.deserialize_detail(body)
+        pass
 
     def deserialize_list(self, body):
         """
@@ -337,10 +280,7 @@ class Resource(object):
 
         :returns: The deserialized body or an empty ``list``
         """
-        if body:
-            return self.serializer.deserialize(body)
-
-        return []
+        pass
 
     def deserialize_detail(self, body):
         """
@@ -351,10 +291,7 @@ class Resource(object):
 
         :returns: The deserialized body or an empty ``dict``
         """
-        if body:
-            return self.serializer.deserialize(body)
-
-        return {}
+        pass
 
     def serialize(self, method, endpoint, data):
         """
@@ -375,14 +312,7 @@ class Resource(object):
         :returns: A serialized version of the data
         :rtype: string
         """
-        if endpoint == 'list':
-            # Create is a special-case, because you POST it to the collection,
-            # not to a detail.
-            if method == 'POST':
-                return self.serialize_detail(data)
-
-            return self.serialize_list(data)
-        return self.serialize_detail(data)
+        pass
 
     def serialize_list(self, data):
         """
@@ -394,18 +324,7 @@ class Resource(object):
         :returns: The serialized body
         :rtype: string
         """
-        if data is None:
-            return ''
-
-        # Check for a ``Data``-like object. We should assume ``True`` (all
-        # data gets prepared) unless it's explicitly marked as not.
-        if not getattr(data, 'should_prepare', True):
-            prepped_data = data.value
-        else:
-            prepped_data = [self.prepare(item) for item in data]
-
-        final_data = self.wrap_list_response(prepped_data)
-        return self.serializer.serialize(final_data)
+        pass
 
     def serialize_detail(self, data):
         """
@@ -417,17 +336,7 @@ class Resource(object):
         :returns: The serialized body
         :rtype: string
         """
-        if data is None:
-            return ''
-
-        # Check for a ``Data``-like object. We should assume ``True`` (all
-        # data gets prepared) unless it's explicitly marked as not.
-        if not getattr(data, 'should_prepare', True):
-            prepped_data = data.value
-        else:
-            prepped_data = self.prepare(data)
-
-        return self.serializer.serialize(prepped_data)
+        pass
 
     def prepare(self, data):
         """
@@ -440,7 +349,7 @@ class Resource(object):
         :returns: A potentially reshaped dict
         :rtype: dict
         """
-        return self.preparer.prepare(data)
+        pass
 
     def wrap_list_response(self, data):
         """
@@ -461,9 +370,7 @@ class Resource(object):
         :returns: A wrapping dict
         :rtype: dict
         """
-        return {
-            "objects": data
-        }
+        pass
 
     def is_authenticated(self):
         """
@@ -476,10 +383,7 @@ class Resource(object):
         :returns: Whether the request is authenticated or not.
         :rtype: boolean
         """
-        if self.request_method() == 'GET':
-            return True
-
-        return False
+        pass
 
     # Common methods the user should implement.
 
@@ -493,7 +397,7 @@ class Resource(object):
         :returns: A collection of data
         :rtype: list or iterable
         """
-        raise MethodNotImplemented()
+        pass
 
     def detail(self, *args, **kwargs):
         """
@@ -505,7 +409,7 @@ class Resource(object):
         :returns: An item
         :rtype: object or dict
         """
-        raise MethodNotImplemented()
+        pass
 
     def create(self, *args, **kwargs):
         """
@@ -516,7 +420,7 @@ class Resource(object):
 
         :returns: May return the created item or ``None``
         """
-        raise MethodNotImplemented()
+        pass
 
     def update(self, *args, **kwargs):
         """
@@ -527,7 +431,7 @@ class Resource(object):
 
         :returns: May return the updated item or ``None``
         """
-        raise MethodNotImplemented()
+        pass
 
     def delete(self, *args, **kwargs):
         """
@@ -538,7 +442,7 @@ class Resource(object):
 
         :returns: ``None``
         """
-        raise MethodNotImplemented()
+        pass
 
     # Uncommon methods the user should implement.
     # These have intentionally uglier method names, which reflects just how
@@ -557,7 +461,7 @@ class Resource(object):
         :returns: A collection of data
         :rtype: list or iterable
         """
-        raise MethodNotImplemented()
+        pass
 
     def create_detail(self, *args, **kwargs):
         """
@@ -571,7 +475,7 @@ class Resource(object):
         :returns: A collection of data
         :rtype: list or iterable
         """
-        raise MethodNotImplemented()
+        pass
 
     def delete_list(self, *args, **kwargs):
         """
@@ -586,4 +490,4 @@ class Resource(object):
 
         :returns: ``None``
         """
-        raise MethodNotImplemented()
+        pass

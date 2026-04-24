@@ -14,42 +14,20 @@ class FlaskResource(Resource):
     """
     @classmethod
     def as_list(cls, *init_args, **init_kwargs):
-        # Overridden here, because Flask uses a global ``request`` object
-        # rather than passing it to each view.
-        def _wrapper(*args, **kwargs):
-            # Make a new instance so that no state potentially leaks between
-            # instances.
-            pass
-
-        return _wrapper
+        pass
 
     @classmethod
     def as_detail(cls, *init_args, **init_kwargs):
-        # Overridden here, because Flask uses a global ``request`` object
-        # rather than passing it to each view.
-        def _wrapper(*args, **kwargs):
-            # Make a new instance so that no state potentially leaks between
-            # instances.
-            pass
-
-        return _wrapper
+        pass
 
     def request_body(self):
-        return self.request.data
+        pass
 
     def is_debug(self):
-        from flask import current_app
-        return current_app.debug
+        pass
 
     def build_response(self, data, status=OK):
-        if status == NO_CONTENT:
-            # Avoid crashing the client when it tries to parse nonexisting JSON.
-            content_type = 'text/plain'
-        else:
-            content_type = 'application/json'
-        return make_response(data, status, {
-            'Content-Type': content_type,
-        })
+        pass
 
     @classmethod
     def build_endpoint_name(cls, name, endpoint_prefix=None):

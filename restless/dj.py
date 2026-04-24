@@ -21,70 +21,28 @@ class DjangoResource(Resource):
     """
 
     def serialize_list(self, data):
-        if data is None:
-            return super(DjangoResource, self).serialize_list(data)
-
-        if getattr(self, 'paginate', False):
-            page_size = getattr(self, 'page_size', getattr(settings, 'RESTLESS_PAGE_SIZE', 10))
-            paginator = Paginator(data, page_size)
-
-            page_number = self.request.GET.get('p', 1)
-
-            if page_number not in paginator.page_range:
-                raise BadRequest('Invalid page number')
-
-            self.page = paginator.page(page_number)
-            data = self.page.object_list
-
-        return super(DjangoResource, self).serialize_list(data)
+        pass
 
     def wrap_list_response(self, data):
-        response_dict = super(DjangoResource, self).wrap_list_response(data)
-
-        if hasattr(self, 'page'):
-            next_page = self.page.has_next() and self.page.next_page_number() or None
-            previous_page = self.page.has_previous() and self.page.previous_page_number() or None
-
-            response_dict['pagination'] = {
-                'num_pages': self.page.paginator.num_pages,
-                'count': self.page.paginator.count,
-                'page': self.page.number,
-                'start_index': self.page.start_index(),
-                'end_index': self.page.end_index(),
-                'next_page': next_page,
-                'previous_page': previous_page,
-                'per_page': self.page.paginator.per_page,
-            }
-
-        return response_dict
+        pass
 
     # Because Django.
     @classmethod
     def as_list(self, *args, **kwargs):
-        return csrf_exempt(super(DjangoResource, self).as_list(*args, **kwargs))
+        pass
 
     @classmethod
     def as_detail(self, *args, **kwargs):
-        return csrf_exempt(super(DjangoResource, self).as_detail(*args, **kwargs))
+        pass
 
     def is_debug(self):
-        return settings.DEBUG
+        pass
 
     def build_response(self, data, status=OK):
-        if status == NO_CONTENT:
-            # Avoid crashing the client when it tries to parse nonexisting JSON.
-            content_type = 'text/plain'
-        else:
-            content_type = 'application/json'
-        resp = HttpResponse(data, content_type=content_type, status=status)
-        return resp
+        pass
 
     def build_error(self, err):
-        # A bit nicer behavior surrounding things that don't exist.
-        if isinstance(err, (ObjectDoesNotExist, Http404)):
-            err = NotFound(msg=six.text_type(err))
-
-        return super(DjangoResource, self).build_error(err)
+        pass
 
     @classmethod
     def build_url_name(cls, name, name_prefix=None):

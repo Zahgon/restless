@@ -14,25 +14,14 @@ class PyramidResource(Resource):
 
     @classmethod
     def as_list(cls, *args, **kwargs):
-        return super(PyramidResource, cls).as_list(*args, **kwargs)
+        pass
 
     @classmethod
     def as_detail(cls, *init_args, **init_kwargs):
-        def _wrapper(request):
-            # Make a new instance so that no state potentially leaks between
-            # instances.
-            pass
-
-        return _wrapper
+        pass
 
     def build_response(self, data, status=OK):
-        if status == NO_CONTENT:
-            # Avoid crashing the client when it tries to parse nonexisting JSON.
-            content_type = 'text/plain'
-        else:
-            content_type = 'application/json'
-        resp = Response(data, status_code=status, content_type=content_type)
-        return resp
+        pass
 
     @classmethod
     def build_routename(cls, name, routename_prefix=None):
